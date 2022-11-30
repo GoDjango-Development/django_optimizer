@@ -21,7 +21,7 @@ class LoadFile():
     """
     content: str = None
     path: str = None
-    dynamic_folder = opath.basename(str(settings.DYNAMIC_ROOT).removesuffix(opath.sep))
+    dynamic_folder = opath.basename(str(settings.DYNAMIC_ROOT).removesuffix(opath.sep)) if hasattr(settings, "DYNAMIC_ROOT") else None
     static_folder = get_finder("django.contrib.staticfiles.finders.AppDirectoriesFinder").source_dir
     relative_path: str = None
     _is_dynamic: bool = False

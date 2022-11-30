@@ -2,7 +2,6 @@ from django.conf import settings
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.utils.deprecation import MiddlewareMixin
-from debug_toolbar.middleware import DebugToolbarMiddleware as dtm
 from time import thread_time_ns
 from asgiref.sync import async_to_sync
 from hashlib import sha256
