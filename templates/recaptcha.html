@@ -1,0 +1,14 @@
+{% load assets %}
+{# EXPERIMENTAL YET #}
+<input
+    data-sitekey="{{ 'CAPTCHA_SITE_TOKEN'|from_settings }}" 
+    data-callback='onSubmit' 
+    data-action='submit'
+    data-target="{{ protected_url }}" 
+    type="submit"
+    disabled="true"
+    class="g-recaptcha {{ classes }}"
+    value='{% trans "Submit" %}'>
+</input>
+
+<script async defer src="https://www.google.com/recaptcha/api.js"></script>

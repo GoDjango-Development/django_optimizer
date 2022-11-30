@@ -1,0 +1,28 @@
+{% load static assets %}
+{# Starts the service worker #}
+
+<script nonce="{% generate_nonce 'service_worker' rule_type='script worker' %}">
+    if("serviceWorker" in navigator){
+        navigator.serviceWorker.register("/service_worker.js", {
+            scope: "/"
+        }).then((registration) => {
+            let serviceWorker;
+            if(registration.installing){
+                serviceWorker = registration.installing;
+            }else if(registration.waiting){
+                serviceWorker = registration.waiting;
+            }else if(registration.active){
+                serviceWorker = registration.active;
+            }
+            if(serviceWorker){
+                serviceWorker.addEventListener("statechange", (e)=>{
+                    console.log("Service Worker State Changed");
+                })
+            }
+        }).catch((error)=>{
+            // an error ocurre during the registration process
+        })
+    }else {
+        // current browser doesnt support service worker
+    }
+</script>

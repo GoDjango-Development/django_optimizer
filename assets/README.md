@@ -1,0 +1,1 @@
+Avoid mixing this with statics as statics will be collected and served by the webserver but assets are going to be served by django

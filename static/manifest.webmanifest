@@ -1,0 +1,43 @@
+{
+  "lang": "en",
+  "dir": "ltr",
+  "name": "Cloudfood: The Global Market",
+  "short_name": "Cloudfood",
+  "icons": [{
+    "src": "img/logo_64x64.png",
+    "sizes": "64x64",
+    "type": "image/png"
+  },{
+    "src": "img/logo_96x96.png",
+    "sizes": "96x96",
+    "type": "image/png"
+  },{
+    "src": "img/logo_128x128.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  },{
+    "src": "img/logo_144x144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  },{
+    "src": "img/logo_512x512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "shortcuts": [
+    {
+      "name": "Login",
+      "description": "Login into your account",
+      "url": "/account/login/"
+    }
+  ],
+  "scope": "/",
+  "id":"cloudfood",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "theme_color": "aliceblue",  
+  "background_color": "#ffffff",
+  "icon": "img/logo_144x144.png"
+}
+  
