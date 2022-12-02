@@ -6,6 +6,7 @@ from debug_toolbar.middleware import DebugToolbarMiddleware as dtm
 from time import thread_time_ns
 from asgiref.sync import async_to_sync
 from hashlib import sha256
+from functools import lru_cache
 
 class CSPMiddleware(MiddlewareMixin):
     default_csp = (
@@ -48,7 +49,8 @@ class CSPMiddleware(MiddlewareMixin):
         return nonce # For use with HTML ' chars is not escaped so is better off 
 
     @classmethod
-    def settings_to_string(cls):
+    @lru_cache # When retreiving again the same page returns it from cache instead of recomputing this function
+    def settings_to_string(cls, *cacheable_args):
         if not cls.csp:
             return cls.default_csp
         return "".join("%s %s;"%(rule, " ".join(cls.csp[rule] + cls._csp_stack.get(rule, tuple()))) for rule in cls.csp)
@@ -60,7 +62,6 @@ class CSPMiddleware(MiddlewareMixin):
         """
             Returns the http response with the Content Security Policy for the requested url
         """
-        # response.headers: ResponseHeaders
         if type(response) is HttpResponse:
-            response.headers["Content-Security-Policy"] = self.__class__.settings_to_string()
+            response.headers["Content-Security-Policy"] = self.__class__.settings_to_string(request.path)
         return response
