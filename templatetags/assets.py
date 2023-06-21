@@ -73,7 +73,13 @@ def load_image(image: ImageFieldFile, aspect_ratio:str, force_resize=False):
     if len(aspect_ratio) == 1:
         aspect_ratio *= 2
     folder = os.path.dirname(image.path)
-    name, extension = os.path.basename(image.path).split(os.path.extsep)
+    
+    t =  os.path.basename(image.path)[::-1].split(os.path.extsep, 1)
+    if not len(t) == 2:
+        return "error_loading_image" # str(t, image.path)
+    name = t[1][::-1]
+    extension = t[0][::-1]
+    
     new_name = "{0}_{1}x{2}{3}{4}".format(name, *aspect_ratio, os.path.extsep, extension)
     if not os.path.exists(os.path.join(folder, new_name)):
         with PIL.Image.open(image.path) as thumb:
