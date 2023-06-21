@@ -106,7 +106,11 @@ def load_str_image(image_url: str, aspect_ratio:str, force_resize=False):
     else:
         image_path = os.path.join(settings.MEDIA_ROOT, image_url)
     folder = os.path.dirname(image_path)
-    name, extension = os.path.basename(image_path).split(os.path.extsep)
+    t =  os.path.basename(image_path)[::-1].split(os.path.extsep, 1)
+    if not len(t) == 2:
+        return "error_loading_image" # str(t, image.path)
+    name = t[1][::-1]
+    extension = t[0][::-1]
     new_name = "{0}_{1}x{2}{3}{4}".format(name, *aspect_ratio, os.path.extsep, extension)
     if not os.path.exists(os.path.join(folder, new_name)):
         with PIL.Image.open(image_path) as thumb:
