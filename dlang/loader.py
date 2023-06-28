@@ -47,7 +47,7 @@ class LoadFile():
     %DYNAMIC_ROOT%/%namespace%/%path% 
     where %path% is the path given in parameters or the file name if file were given.
     """
-    def __init__(self, data=None, path=None, file=None, context: [dict|Context] =None, in_app=True, namespace=""):
+    def __init__(self, data=None, path=None, file=None, context: Context =None, in_app=True, namespace=""):
         self.in_app = in_app
         self.context = context if type(context) is dict else context.flatten()
         self.namespace = (namespace and (re.search("[\w]+", namespace)) or [""])[0]
