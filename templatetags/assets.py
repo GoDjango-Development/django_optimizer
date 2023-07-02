@@ -73,14 +73,22 @@ def load_image(image: ImageFieldFile, aspect_ratio:str, force_resize=False):
     if len(aspect_ratio) == 1:
         aspect_ratio *= 2
     folder = os.path.dirname(image.path)
-    name, extension = os.path.basename(image.path).split(os.path.extsep)
+    
+    t =  os.path.basename(image.path)[::-1].split(os.path.extsep, 1)
+    if not len(t) == 2:
+        return "error_loading_image" # str(t, image.path)
+    name = t[1][::-1]
+    extension = t[0][::-1]
+    
     new_name = "{0}_{1}x{2}{3}{4}".format(name, *aspect_ratio, os.path.extsep, extension)
     if not os.path.exists(os.path.join(folder, new_name)):
-        with PIL.Image.open(image.path) as thumb:
-            thumb: PIL.Image.Image
-            thumb = thumb.resize(aspect_ratio) if force_resize else thumb.copy()
-            thumb.thumbnail(aspect_ratio)
-            thumb.save(os.path.join(folder, new_name))
+        try:
+            with PIL.Image.open(image.path) as thumb:
+                thumb = thumb.resize(aspect_ratio) if force_resize else thumb.copy()
+                thumb.thumbnail(aspect_ratio)
+                thumb.save(os.path.join(folder, new_name))
+        except FileNotFoundError:
+            pass # Ignore and returns later which makes the file to launch a 404
     return os.path.join(os.path.dirname(image.url), new_name)
 
 @register.simple_tag()
@@ -100,12 +108,18 @@ def load_str_image(image_url: str, aspect_ratio:str, force_resize=False):
     else:
         image_path = os.path.join(settings.MEDIA_ROOT, image_url)
     folder = os.path.dirname(image_path)
-    name, extension = os.path.basename(image_path).split(os.path.extsep)
+    t =  os.path.basename(image_path)[::-1].split(os.path.extsep, 1)
+    if not len(t) == 2:
+        return "error_loading_image" # str(t, image.path)
+    name = t[1][::-1]
+    extension = t[0][::-1]
     new_name = "{0}_{1}x{2}{3}{4}".format(name, *aspect_ratio, os.path.extsep, extension)
     if not os.path.exists(os.path.join(folder, new_name)):
-        with PIL.Image.open(image_path) as thumb:
-            thumb: PIL.Image.Image
-            thumb = thumb.resize(aspect_ratio) if force_resize else thumb.copy()
-            thumb.thumbnail(aspect_ratio)
-            thumb.save(os.path.join(folder, new_name))
+        try:
+            with PIL.Image.open(image_path) as thumb:
+                thumb = thumb.resize(aspect_ratio) if force_resize else thumb.copy()
+                thumb.thumbnail(aspect_ratio)
+                thumb.save(os.path.join(folder, new_name))
+        except FileNotFoundError:
+            pass
     return os.path.join(settings.STATIC_URL if is_static else settings.MEDIA_URL, os.path.dirname(image_url), new_name)

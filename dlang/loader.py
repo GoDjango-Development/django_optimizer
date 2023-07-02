@@ -21,7 +21,7 @@ class LoadFile():
     """
     content: str = None
     path: str = None
-    dynamic_folder = opath.basename(str(settings.DYNAMIC_ROOT).removesuffix(opath.sep))
+    dynamic_folder = opath.basename(str(settings.DYNAMIC_ROOT).removesuffix(opath.sep)) if hasattr(settings, "DYNAMIC_ROOT") else None
     static_folder = get_finder("django.contrib.staticfiles.finders.AppDirectoriesFinder").source_dir
     relative_path: str = None
     _is_dynamic: bool = False
@@ -47,7 +47,7 @@ class LoadFile():
     %DYNAMIC_ROOT%/%namespace%/%path% 
     where %path% is the path given in parameters or the file name if file were given.
     """
-    def __init__(self, data=None, path=None, file=None, context: [dict|Context] =None, in_app=True, namespace=""):
+    def __init__(self, data=None, path=None, file=None, context: Context =None, in_app=True, namespace=""):
         self.in_app = in_app
         self.context = context if type(context) is dict else context.flatten()
         self.namespace = (namespace and (re.search("[\w]+", namespace)) or [""])[0]
@@ -222,9 +222,9 @@ class LoadFile():
         LoadFile.commit_file(static_path, self.content)
             
 
-    @lru_cache() # this is very important as reduce significantly the amount of time the web writes to disk, aslo it use a least recent used algorithm
-    # which reduce the memory consumption issue 
     @staticmethod
+    @lru_cache # this is very important as reduce significantly the amount of time the web writes to disk, aslo it use a least recent used algorithm
+    # which reduce the memory consumption issue 
     def commit_file(static_path, content):
         with open(static_path, "w") as file: # save the content in ready to serve static folder
             file.write(content)
@@ -250,7 +250,7 @@ class LoadFile():
     def _absolute_path(self, path=""):
         return self.find_by_app(path)[1] or opath.join(settings.DYNAMIC_ROOT, path.removeprefix(opath.sep))
 
-    @lru_cache()
+    @lru_cache
     def find_by_app(self, path: str):
         for app_name, app_config in apps.app_configs.items():
             on_app_path = opath.join(app_config.path, self.dynamic_folder, path.removeprefix(opath.sep))
@@ -262,7 +262,7 @@ class LoadFile():
         self.in_app = False # Even if you say this file is in an app we cannot find it, so for us is not in app ;) 
         return None, False
         
-    @lru_cache()
+    @lru_cache
     def get_static_path(self, ):
         # folder_hierarch = self.path.removeprefix(str(settings.DYNAMIC_ROOT)).removeprefix(opath.sep) # Returns folders and subfolders after the DYNAMIC ROOT
         static_path = self.relative_path
