@@ -30,6 +30,7 @@ class CSPMiddleware(MiddlewareMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
 
 
     strict_dynamic = False
@@ -47,8 +48,8 @@ class CSPMiddleware(MiddlewareMixin):
                 cls._csp_stack[rule_name] = cls._csp_stack.get(rule_name, ()) + ("'nonce-%s'"%nonce,)
         return nonce # For use with HTML ' chars is not escaped so is better off 
 
+    #@lru_cache # When retreiving again the same page returns it from cache instead of recomputing this function
     @classmethod
-    @lru_cache # When retreiving again the same page returns it from cache instead of recomputing this function
     def settings_to_string(cls, *cacheable_args):
         if not cls.csp:
             return cls.default_csp
