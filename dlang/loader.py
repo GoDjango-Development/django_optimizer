@@ -146,11 +146,9 @@ class LoadFile():
             but the actual language is intended to be merged with another one we are creating called sly :-) , xD that and that i dont 
             think on that when i was creating this T_T xD
         """
-        #print("processing", parts)
         processed = False
         for arg, i in zip(parts, range(len(parts))): # must process each given args for the form a.b.c.d etc..
             context_var, *call_path = arg.split(".") # Get context var and the execution path...
-            # print("processing_arg: %s divided into: %s and %s"%(arg, context_var, str(call_path)))
             if len(call_path) == 0:
                 continue
             context_var:object = self.context.get(context_var, None) # Get the actual value of the context var (i mean the object in the context)
@@ -158,14 +156,12 @@ class LoadFile():
                 parts[i] = "null"
                 continue
             for call in call_path:
-                #print("getting %s from %s in context %s"%(call, context_var, call_path))
                 context_var = getattr(context_var, call, None) or (
                     hasattr(context_var, "get") and context_var.get(call) # use the get api to get the call value, this is
                     # mostly used when dealing with dicts like object a possible problem with this aproach is that if a dict like
                     # have for example a key called get then the retrieved value will be the function because the getattr preceeds
                     # the get call :) 
                 )# save the actual call state in the context var
-                #print("returned %s"%context_var)
                 if context_var is None:
                     parts[i] = "null"
                     return processed
@@ -175,7 +171,6 @@ class LoadFile():
                     # stack one argument to the function
             parts[i] = str(context_var)
             processed = True
-        #print("result: ", parts)
         return processed
 
     def _process_builtins(self, parts: list, **kwargs):
