@@ -217,9 +217,9 @@ class LoadFile():
         LoadFile.commit_file(static_path, self.content)
             
 
-    @staticmethod
-    @lru_cache # this is very important as reduce significantly the amount of time the web writes to disk, aslo it use a least recent used algorithm
+    #@lru_cache # this is very important as reduce significantly the amount of time the web writes to disk, aslo it use a least recent used algorithm
     # which reduce the memory consumption issue 
+    @staticmethod
     def commit_file(static_path, content):
         with open(static_path, "w") as file: # save the content in ready to serve static folder
             file.write(content)

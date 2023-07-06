@@ -72,8 +72,11 @@ def load_image(image: ImageFieldFile, aspect_ratio:str, force_resize=False):
     aspect_ratio = list(map(lambda x: int(x), aspect_ratio.split("x", 1)))
     if len(aspect_ratio) == 1:
         aspect_ratio *= 2
-    folder = os.path.dirname(image.path)
-    
+    folder = None
+    try:
+        folder = os.path.dirname(image.path)
+    except ValueError:
+        return "error_loading_image"
     t =  os.path.basename(image.path)[::-1].split(os.path.extsep, 1)
     if not len(t) == 2:
         return "error_loading_image" # str(t, image.path)
