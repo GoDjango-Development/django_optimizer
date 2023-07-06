@@ -221,6 +221,7 @@ class LoadFile():
     # which reduce the memory consumption issue 
     @staticmethod
     def commit_file(static_path, content):
+        print("DLANG LOADER COMMITING FILE TEST")
         with open(static_path, "w") as file: # save the content in ready to serve static folder
             file.write(content)
 
