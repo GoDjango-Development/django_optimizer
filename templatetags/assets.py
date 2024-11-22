@@ -67,6 +67,8 @@ def generate_nonce(name: str, rule_type: str):
 
 @register.simple_tag()
 def load_image(image: ImageFieldFile, aspect_ratio:str, force_resize=False):
+    if not image:
+        return None
     if not (type(image) is ImageFieldFile):
         return load_str_image(image, aspect_ratio)
     aspect_ratio = list(map(lambda x: int(x), aspect_ratio.split("x", 1)))
@@ -100,6 +102,8 @@ def load_str_image(image_url: str, aspect_ratio:str, force_resize=False):
         Used for raw urls, how this is work for example, you give an URL starting with {settings.STATIC_URL} if that is the case
         we search the image in t
     """
+    if not image_url:
+        return None
     if type(image_url) is ImageFieldFile:
         return load_image(image_url, aspect_ratio)
     aspect_ratio = list(map(lambda x: int(x), aspect_ratio.split("x", 1)))
